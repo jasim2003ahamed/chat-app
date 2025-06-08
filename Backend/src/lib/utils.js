@@ -18,19 +18,18 @@
 import jwt from "jsonwebtoken";
 
 export const generateToken = (userId, res) => {
-  // Create JWT token with userId payload, expires in 7 days
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
-  // Set token in cookie with secure, httpOnly, and sameSite options
   res.cookie("jwt", token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days in milliseconds
-    httpOnly: true,                   // Prevent client JS access (XSS protection)
-    sameSite: "strict",               // CSRF protection
-    secure: process.env.NODE_ENV !== "development", // Only send cookie over HTTPS in production
-    path: "/",                       // Cookie valid for entire site
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: "None",               // ❗Important for cross-origin
+    secure: process.env.NODE_ENV !== "development", // ❗Needs to be true on Render
+    path: "/",
   });
 
   return token;
 };
+
